@@ -1,9 +1,8 @@
-import { RepeatType } from '../types.ts';
+import { EventForm } from '../types.ts';
 
-export function repeatingDates(
-  startDate: string,
-  repeat: { type: RepeatType; interval: number; endDate?: string }
-) {
+export function repeatingDates(eventForm: EventForm) {
+  const { date: startDate, repeat } = eventForm;
+
   if (repeat.type === 'daily') {
     const dates = [];
     const start = new Date(startDate);
