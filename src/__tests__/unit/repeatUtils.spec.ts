@@ -56,7 +56,7 @@ describe('repeatingDates', () => {
       },
     ];
     const result = repeatingDates(events[0]);
-    expect(result).toEqual(['2025-10-31', '2025-11-30', '2025-12-31']);
+    expect(result).toEqual(['2025-10-31', '2025-12-31']);
   });
 
   it('매년 반복 --> 윤년 2월 29일에 시작하면 2월 29일이 있는 해에만 생성한다', () => {});
