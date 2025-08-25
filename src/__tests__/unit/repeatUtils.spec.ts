@@ -22,11 +22,21 @@ describe('repeatingDates', () => {
   });
 
   it('매주 반복 --> 시작일부터 종료일까지 매주 생성한다', () => {
-    const result = repeatingDates('2025-10-01', {
-      type: 'weekly',
-      interval: 1,
-      endDate: '2025-10-18',
-    });
+    const events: Event[] = [
+      {
+        id: '1',
+        title: '이벤트 1',
+        date: '2025-10-01',
+        startTime: '10:00',
+        endTime: '11:00',
+        description: '이벤트 1 설명',
+        location: '이벤트 1 장소',
+        category: '이벤트 1 카테고리',
+        repeat: { type: 'weekly', interval: 1, endDate: '2025-10-18' },
+        notificationTime: 10,
+      },
+    ];
+    const result = repeatingDates(events[0]);
     expect(result).toEqual(['2025-10-01', '2025-10-08', '2025-10-15']);
   });
 
