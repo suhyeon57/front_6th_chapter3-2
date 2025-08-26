@@ -59,5 +59,22 @@ describe('repeatingDates', () => {
     expect(result).toEqual(['2025-10-31', '2025-12-31']);
   });
 
-  it('매년 반복 --> 윤년 2월 29일에 시작하면 2월 29일이 있는 해에만 생성한다', () => {});
+  it('매년 반복 --> 윤년 2월 29일에 시작하면 2월 29일이 있는 해에만 생성한다', () => {
+    const events: Event[] = [
+      {
+        id: '1',
+        title: '이벤트 1',
+        date: '2024-02-29',
+        startTime: '10:00',
+        endTime: '11:00',
+        description: '이벤트 1 설명',
+        location: '이벤트 1 장소',
+        category: '이벤트 1 카테고리',
+        repeat: { type: 'monthly', interval: 12, endDate: '2032-12-31' },
+        notificationTime: 10,
+      },
+    ];
+    const result = repeatingDates(events[0]);
+    expect(result).toEqual(['2024-02-29', '2028-02-29', '2032-02-29']);
+  });
 });
