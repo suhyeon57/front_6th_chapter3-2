@@ -22,4 +22,28 @@ export function repeatingDates(eventForm: EventForm) {
     }
     return dates;
   }
+  if (repeat.type === 'monthly') {
+    const dates = [];
+    const start = new Date(startDate);
+    const end = new Date(repeat.endDate!);
+
+    let year = start.getFullYear();
+    let month = start.getMonth();
+    const day = start.getDate();
+
+    while (true) {
+      const temp = new Date(year, month, day);
+      if (temp > end) break;
+      if (day === 31) {
+        if (temp.getDate() === 31) dates.push(temp.toISOString().split('T')[0]);
+      } else {
+        dates.push(temp.toISOString().split('T')[0]);
+      }
+      month += repeat.interval;
+      year += Math.floor(month / 12);
+      month = month % 12;
+    }
+
+    return dates;
+  }
 }
