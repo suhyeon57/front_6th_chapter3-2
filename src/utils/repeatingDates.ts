@@ -3,10 +3,13 @@ import { EventForm } from '../types.ts';
 export function repeatingDates(eventForm: EventForm): EventForm[] {
   const { date: startDate, repeat, ...rest } = eventForm;
   const dates: string[] = [];
+  const MAX_REPEAT_END_DATE = '2025-10-30';
+
+  const endDateStr = repeat.endDate ?? MAX_REPEAT_END_DATE;
+  const end = new Date(endDateStr);
 
   if (repeat.type === 'daily') {
     const start = new Date(startDate);
-    const end = new Date(repeat.endDate!);
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + repeat.interval)) {
       dates.push(d.toISOString().split('T')[0]);
     }
@@ -14,7 +17,6 @@ export function repeatingDates(eventForm: EventForm): EventForm[] {
 
   if (repeat.type === 'weekly') {
     const start = new Date(startDate);
-    const end = new Date(repeat.endDate!);
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + repeat.interval * 7)) {
       dates.push(d.toISOString().split('T')[0]);
     }
@@ -22,7 +24,7 @@ export function repeatingDates(eventForm: EventForm): EventForm[] {
 
   if (repeat.type === 'monthly') {
     const start = new Date(startDate);
-    const end = new Date(repeat.endDate!);
+    const end = new Date(endDateStr);
     let year = start.getFullYear();
     let month = start.getMonth();
     const day = start.getDate();
@@ -49,7 +51,7 @@ export function repeatingDates(eventForm: EventForm): EventForm[] {
 
   if (repeat.type === 'yearly') {
     const start = new Date(startDate);
-    const end = new Date(repeat.endDate!);
+    const end = new Date(endDateStr);
     let year = start.getFullYear();
     const month = start.getMonth();
     const day = start.getDate();
