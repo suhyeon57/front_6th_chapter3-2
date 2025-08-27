@@ -86,4 +86,29 @@ describe('repeatingDates', () => {
     expect(result[1].date).toBe('2028-02-29');
     expect(result[2].date).toBe('2032-02-29');
   });
+
+  it('반복 일정의 종료일을 지정하지 않으면 2025-10-30까지만 반복 일정이 생성된다', async () => {
+    const events: Event[] = [
+      {
+        id: '1',
+        title: '이벤트 1',
+        date: '2025-10-01',
+        startTime: '10:00',
+        endTime: '11:00',
+        description: '이벤트 1 설명',
+        location: '이벤트 1 장소',
+        category: '이벤트 1 카테고리',
+        repeat: { type: 'daily', interval: 5 },
+        notificationTime: 10,
+      },
+    ];
+
+    const result = repeatingDates(events[0]);
+    expect(result[0].date).toBe('2025-10-01');
+    expect(result[1].date).toBe('2025-10-06');
+    expect(result[2].date).toBe('2025-10-11');
+    expect(result[3].date).toBe('2025-10-16');
+    expect(result[4].date).toBe('2025-10-21');
+    expect(result[5].date).toBe('2025-10-26');
+  });
 });
