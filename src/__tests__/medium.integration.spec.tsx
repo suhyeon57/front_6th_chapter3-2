@@ -49,6 +49,7 @@ const saveSchedule = async (
   await user.type(screen.getByLabelText('위치'), location);
   await user.click(screen.getByLabelText('카테고리'));
   await user.click(within(screen.getByLabelText('카테고리')).getByRole('combobox'));
+
   await user.click(screen.getByRole('option', { name: `${category}-option` }));
 
   await user.click(screen.getByTestId('event-submit-button'));
@@ -342,22 +343,29 @@ it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트
 });
 
 it('반복 일정을 생성하면, 캘린더 뷰에 반복 아이콘이 표시된다.', async () => {
-  setupMockHandlerCreation();
+  const events: Event[] = [
+    {
+      id: '1',
+      title: '기존 회의',
+      date: '2025-10-01',
+      startTime: '09:00',
+      endTime: '10:00',
+      description: '기존 팀 미팅',
+      location: '회의실 B',
+      category: '업무',
+      repeat: { type: 'weekly', interval: 1, endDate: '2025-10-30' },
+      notificationTime: 10,
+    },
+  ];
+  setupMockHandlerCreation(events);
 
   const { user } = setup(<App />);
-  await saveSchedule(user, {
-    title: '반복 회의',
-    date: '2025-10-02',
-    startTime: '09:00',
-    endTime: '10:00',
-    description: '반복 회의입니다.',
-    location: '회의실 A',
-    category: '업무',
-    repeat: { type: 'weekly', interval: 1, endDate: '2025-10-30' },
-    notificationTime: 10,
-  });
 
-  const monthView = within(screen.getByTestId('month-view'));
-  const eventCell = monthView.getByText('반복 회의').closest('td')!;
+  // const monthView = within(screen.getByTestId('month-view'));
+  // const eventCell = monthView.getByText('기존 회의').closest('td')!;
+  // expect(within(eventCell).getByTestId('repeat-icon')).toBeInTheDocument();
+  const monthView = await screen.findByTestId('month-view');
+  expect(within(monthView).getByText('기존 회의')).toBeInTheDocument();
+  const eventCell = within(monthView).getByText('기존 회의').closest('td')!;
   expect(within(eventCell).getByTestId('repeat-icon')).toBeInTheDocument();
 });
