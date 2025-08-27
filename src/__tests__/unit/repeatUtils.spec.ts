@@ -18,7 +18,11 @@ describe('repeatingDates', () => {
       },
     ];
     const result = repeatingDates(events[0]);
-    expect(result).toEqual(['2025-10-01', '2025-10-02', '2025-10-03', '2025-10-04', '2025-10-05']);
+    expect(result[0].date).toBe('2025-10-01');
+    expect(result[1].date).toBe('2025-10-02');
+    expect(result[2].date).toBe('2025-10-03');
+    expect(result[3].date).toBe('2025-10-04');
+    expect(result[4].date).toBe('2025-10-05');
   });
 
   it('매주 반복 --> 시작일부터 종료일까지 매주 생성한다', () => {
@@ -37,7 +41,9 @@ describe('repeatingDates', () => {
       },
     ];
     const result = repeatingDates(events[0]);
-    expect(result).toEqual(['2025-10-01', '2025-10-08', '2025-10-15']);
+    expect(result[0].date).toBe('2025-10-01');
+    expect(result[1].date).toBe('2025-10-08');
+    expect(result[2].date).toBe('2025-10-15');
   });
 
   it('매월 반복 --> 31일에 시작하면 31일이 있는 달에만 생성한다', () => {
@@ -56,7 +62,8 @@ describe('repeatingDates', () => {
       },
     ];
     const result = repeatingDates(events[0]);
-    expect(result).toEqual(['2025-10-31', '2025-12-31']);
+    expect(result[0].date).toBe('2025-10-31');
+    expect(result[1].date).toBe('2025-12-31');
   });
 
   it('매년 반복 --> 윤년 2월 29일에 시작하면 2월 29일이 있는 해에만 생성한다', () => {
@@ -75,6 +82,8 @@ describe('repeatingDates', () => {
       },
     ];
     const result = repeatingDates(events[0]);
-    expect(result).toEqual(['2024-02-29', '2028-02-29', '2032-02-29']);
+    expect(result[0].date).toBe('2024-02-29');
+    expect(result[1].date).toBe('2028-02-29');
+    expect(result[2].date).toBe('2032-02-29');
   });
 });

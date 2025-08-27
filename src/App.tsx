@@ -4,6 +4,7 @@ import Close from '@mui/icons-material/Close';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import Notifications from '@mui/icons-material/Notifications';
+import LoopIcon from '@mui/icons-material/Loop';
 import {
   Alert,
   AlertTitle,
@@ -275,6 +276,7 @@ function App() {
                             )}
                             {getEventsForDay(filteredEvents, day).map((event) => {
                               const isNotified = notifiedEvents.includes(event.id);
+                              const isRepeating = event.repeat.type !== 'none';
                               return (
                                 <Box
                                   key={event.id}
@@ -292,6 +294,13 @@ function App() {
                                 >
                                   <Stack direction="row" spacing={1} alignItems="center">
                                     {isNotified && <Notifications fontSize="small" />}
+                                    {isRepeating && (
+                                      <LoopIcon
+                                        data-testid="repeat-icon"
+                                        fontSize="small"
+                                        color="primary"
+                                      />
+                                    )}
                                     <Typography
                                       variant="caption"
                                       noWrap
