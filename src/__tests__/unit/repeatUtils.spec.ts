@@ -70,7 +70,7 @@ describe('repeatingDates', () => {
         description: '이벤트 1 설명',
         location: '이벤트 1 장소',
         category: '이벤트 1 카테고리',
-        repeat: { type: 'monthly', interval: 12, endDate: '2032-12-31' },
+        repeat: { type: 'yearly', interval: 1, endDate: '2032-12-31' },
         notificationTime: 10,
       },
     ];
