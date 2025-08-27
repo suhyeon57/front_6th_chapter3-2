@@ -13,6 +13,11 @@ export function repeatingDates(eventForm: EventForm): EventForm[] {
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + repeat.interval)) {
       dates.push(d.toISOString().split('T')[0]);
     }
+    return dates.map((date) => ({
+      ...rest,
+      date,
+      repeat,
+    }));
   }
 
   if (repeat.type === 'weekly') {
@@ -20,6 +25,11 @@ export function repeatingDates(eventForm: EventForm): EventForm[] {
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + repeat.interval * 7)) {
       dates.push(d.toISOString().split('T')[0]);
     }
+    return dates.map((date) => ({
+      ...rest,
+      date,
+      repeat,
+    }));
   }
 
   if (repeat.type === 'monthly') {
@@ -47,6 +57,11 @@ export function repeatingDates(eventForm: EventForm): EventForm[] {
       month = month % 12;
       current = new Date(year, month, day);
     }
+    return dates.map((date) => ({
+      ...rest,
+      date,
+      repeat,
+    }));
   }
 
   if (repeat.type === 'yearly') {
@@ -71,9 +86,12 @@ export function repeatingDates(eventForm: EventForm): EventForm[] {
       }
       year += repeat.interval;
     }
+    return dates.map((date) => ({
+      ...rest,
+      date,
+      repeat,
+    }));
   }
-
-  // 각 날짜마다 새로운 이벤트 객체 반환
   return dates.map((date) => ({
     ...rest,
     date,
