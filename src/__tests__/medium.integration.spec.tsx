@@ -359,11 +359,8 @@ it('반복 일정을 생성하면, 캘린더 뷰에 반복 아이콘이 표시�
   ];
   setupMockHandlerCreation(events);
 
-  const { user } = setup(<App />);
+  setup(<App />);
 
-  // const monthView = within(screen.getByTestId('month-view'));
-  // const eventCell = monthView.getByText('기존 회의').closest('td')!;
-  // expect(within(eventCell).getByTestId('repeat-icon')).toBeInTheDocument();
   const monthView = await screen.findByTestId('month-view');
   expect(within(monthView).getByText('기존 회의')).toBeInTheDocument();
   const eventCell = within(monthView).getByText('기존 회의').closest('td')!;

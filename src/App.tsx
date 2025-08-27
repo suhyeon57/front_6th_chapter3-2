@@ -3,8 +3,8 @@ import ChevronRight from '@mui/icons-material/ChevronRight';
 import Close from '@mui/icons-material/Close';
 import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
-import Notifications from '@mui/icons-material/Notifications';
 import LoopIcon from '@mui/icons-material/Loop';
+import Notifications from '@mui/icons-material/Notifications';
 import {
   Alert,
   AlertTitle,
