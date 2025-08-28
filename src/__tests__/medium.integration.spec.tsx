@@ -361,18 +361,9 @@ it('반복 일정을 생성하면, 캘린더 뷰에 반복 아이콘이 표시�
 
   setup(<App />);
 
-  // const list = await screen.findByTestId('event-list');
-  // expect(within(list).getAllByText('기존 회의')[0]).toBeInTheDocument();
-  // expect(within(list).getAllByText('2025-10-01')[0]).toBeInTheDocument();
-  // expect(within(list).getByText('2025-10-08')).toBeInTheDocument();
-
   const monthView = await screen.findByTestId('month-view');
   const repeatIcons = within(monthView).getAllByTestId('repeat-icon');
   expect(repeatIcons.length).toBe(5); // 10월 1, 8, 15, 22, 29일 등 5주
-  // repeatIcons.forEach((icon, idx) => {
-  //   // 각 아이콘이 속한 날짜 셀의 텍스트 출력
-  //   console.log(`repeat-icon[${idx}]:`, icon.closest('td')?.textContent);
-  // });
 
   for (let day of [1, 8, 15, 22, 29]) {
     const cell = within(monthView).getByText(String(day)).closest('td')!;
@@ -382,7 +373,7 @@ it('반복 일정을 생성하면, 캘린더 뷰에 반복 아이콘이 표시�
 });
 
 it('반복 일정 중 하나를 수정하면 해당 일정이 단일 일정이 되고 반복 아이콘이 사라진다', async () => {
-  const events: Event[] = [
+  const mockEvents: Event[] = [
     {
       id: '1',
       title: '반복 일정',
@@ -395,8 +386,75 @@ it('반복 일정 중 하나를 수정하면 해당 일정이 단일 일정이 �
       repeat: { type: 'daily', interval: 1, endDate: '2025-10-05' },
       notificationTime: 10,
     },
+    {
+      id: '2',
+      title: '반복 일정',
+      date: '2025-10-02',
+      startTime: '10:00',
+      endTime: '11:00',
+      description: '반복 일정 설명',
+      location: '장소',
+      category: '업무',
+      repeat: { type: 'daily', interval: 1, endDate: '2025-10-05' },
+      notificationTime: 10,
+    },
+    {
+      id: '3',
+      title: '반복 일정',
+      date: '2025-10-03',
+      startTime: '10:00',
+      endTime: '11:00',
+      description: '반복 일정 설명',
+      location: '장소',
+      category: '업무',
+      repeat: { type: 'daily', interval: 1, endDate: '2025-10-05' },
+      notificationTime: 10,
+    },
+    {
+      id: '4',
+      title: '반복 일정',
+      date: '2025-10-04',
+      startTime: '10:00',
+      endTime: '11:00',
+      description: '반복 일정 설명',
+      location: '장소',
+      category: '업무',
+      repeat: { type: 'daily', interval: 1, endDate: '2025-10-05' },
+      notificationTime: 10,
+    },
+    {
+      id: '5',
+      title: '반복 일정',
+      date: '2025-10-05',
+      startTime: '10:00',
+      endTime: '11:00',
+      description: '반복 일정 설명',
+      location: '장소',
+      category: '업무',
+      repeat: { type: 'daily', interval: 1, endDate: '2025-10-05' },
+      notificationTime: 10,
+    },
   ];
-  setupMockHandlerCreation(events);
+
+  server.use(
+    http.get('/api/events', () => {
+      return HttpResponse.json({ events: mockEvents });
+    }),
+    http.post('/api/events', async ({ request }) => {
+      const newEvent = (await request.json()) as Event;
+      newEvent.id = String(mockEvents.length + 1);
+      mockEvents.push(newEvent);
+      return HttpResponse.json(newEvent, { status: 201 });
+    }),
+    http.put('/api/events/:id', async ({ params, request }) => {
+      const { id } = params;
+      const updatedEvent = (await request.json()) as Event;
+      const index = mockEvents.findIndex((event) => event.id === id);
+
+      mockEvents[index] = { ...mockEvents[index], ...updatedEvent };
+      return HttpResponse.json(mockEvents[index]);
+    })
+  );
   const { user } = setup(<App />);
 
   const monthView = await screen.findByTestId('month-view');
