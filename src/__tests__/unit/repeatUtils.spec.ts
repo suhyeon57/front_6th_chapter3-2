@@ -133,9 +133,9 @@ describe('repeatingDates', () => {
     );
 
     console.log(modified);
-    // 10월 3일 일정은 repeat.type이 none이어야 함
+
     expect(modified[2].repeat.type).toBe('none');
-    // 나머지 일정은 repeat.type이 daily이어야 함
+
     expect(modified[0].repeat.type).toBe('daily');
     expect(modified[1].repeat.type).toBe('daily');
     expect(modified[3].repeat.type).toBe('daily');
@@ -158,17 +158,12 @@ describe('repeatingDates', () => {
       },
     ];
     const result = repeatingDates(events[0]);
-    // 10월 3일 일정만 삭제
     const deleted = result.filter((event) => event.date !== '2025-10-03');
 
-    // 10월 3일 일정이 없는지 확인
     expect(deleted.find((e) => e.date === '2025-10-03')).toBeUndefined();
-    // 나머지 일정은 모두 존재해야 함
-    expect(deleted.map((e) => e.date)).toEqual([
-      '2025-10-01',
-      '2025-10-02',
-      '2025-10-04',
-      '2025-10-05',
-    ]);
+    expect(deleted[0].date).toBe('2025-10-01');
+    expect(deleted[1].date).toBe('2025-10-02');
+    expect(deleted[2].date).toBe('2025-10-04');
+    expect(deleted[3].date).toBe('2025-10-05');
   });
 });

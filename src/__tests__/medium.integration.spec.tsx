@@ -342,7 +342,7 @@ it('notificationTime을 10으로 하면 지정 시간 10분 전 알람 텍스트
   expect(screen.getByText('10분 후 기존 회의 일정이 시작됩니다.')).toBeInTheDocument();
 });
 
-it.skip('반복 일정을 생성하면, 캘린더 뷰에 반복 아이콘이 표시된다.', async () => {
+it('반복 일정을 생성하면, 캘린더 뷰에 반복 아이콘이 표시된다.', async () => {
   const events: Event[] = [
     {
       id: '1',
@@ -361,12 +361,19 @@ it.skip('반복 일정을 생성하면, 캘린더 뷰에 반복 아이콘이 표
 
   setup(<App />);
 
+  // const list = await screen.findByTestId('event-list');
+  // expect(within(list).getAllByText('기존 회의')[0]).toBeInTheDocument();
+  // expect(within(list).getAllByText('2025-10-01')[0]).toBeInTheDocument();
+  // expect(within(list).getByText('2025-10-08')).toBeInTheDocument();
+
   const monthView = await screen.findByTestId('month-view');
-  // 반복 일정이 표시된 셀의 개수 세기
   const repeatIcons = within(monthView).getAllByTestId('repeat-icon');
   expect(repeatIcons.length).toBe(5); // 10월 1, 8, 15, 22, 29일 등 5주
+  // repeatIcons.forEach((icon, idx) => {
+  //   // 각 아이콘이 속한 날짜 셀의 텍스트 출력
+  //   console.log(`repeat-icon[${idx}]:`, icon.closest('td')?.textContent);
+  // });
 
-  // 각 셀에 '기존 회의'가 표시되는지 확인
   for (let day of [1, 8, 15, 22, 29]) {
     const cell = within(monthView).getByText(String(day)).closest('td')!;
     expect(within(cell).getByText('기존 회의')).toBeInTheDocument();
@@ -374,7 +381,7 @@ it.skip('반복 일정을 생성하면, 캘린더 뷰에 반복 아이콘이 표
   }
 });
 
-it.skip('반복 일정 중 하나를 수정하면 해당 일정이 단일 일정이 되고 반복 아이콘이 사라진다', async () => {
+it('반복 일정 중 하나를 수정하면 해당 일정이 단일 일정이 되고 반복 아이콘이 사라진다', async () => {
   const events: Event[] = [
     {
       id: '1',
@@ -384,7 +391,7 @@ it.skip('반복 일정 중 하나를 수정하면 해당 일정이 단일 일정
       endTime: '11:00',
       description: '반복 일정 설명',
       location: '장소',
-      category: '카테고리',
+      category: '업무',
       repeat: { type: 'daily', interval: 1, endDate: '2025-10-05' },
       notificationTime: 10,
     },
@@ -392,20 +399,24 @@ it.skip('반복 일정 중 하나를 수정하면 해당 일정이 단일 일정
   setupMockHandlerCreation(events);
   const { user } = setup(<App />);
 
-  // 수정 버튼 클릭 (Edit event)
-  const allEditButton = await screen.findAllByLabelText('Edit event');
-  console.log(allEditButton);
-  await user.click(allEditButton[0]);
+  const monthView = await screen.findByTestId('month-view');
+  let repeatIcons = within(monthView).getAllByTestId('repeat-icon');
+  expect(repeatIcons.length).toBe(5);
 
-  // 반복 정보 '없음'으로 변경
+  const editButtons = await screen.findAllByRole('button', { name: 'Edit event' });
+  await user.click(editButtons[0]); // 0번째 수정
+
   await user.click(screen.getByLabelText('반복 일정'));
-  //await user.click(screen.getByRole('option', { name: 'none-option' }));
 
-  // 저장
   await user.click(screen.getByTestId('event-submit-button'));
 
-  const monthView = await screen.findByTestId('month-view');
-  expect(within(monthView).getByText('반복 일정')).toBeInTheDocument();
-  const eventCell = within(monthView).getByText('1').closest('td')!;
-  expect(within(eventCell).queryByTestId('repeat-icon')).toBeNull();
+  repeatIcons = within(monthView).getAllByTestId('repeat-icon');
+
+  const cell = within(monthView).getByText('1').closest('td')!;
+  expect(within(cell).queryByTestId('repeat-icon')).toBeNull();
+
+  for (let day of [2, 3, 4, 5]) {
+    const repeatCell = within(monthView).getByText(String(day)).closest('td')!;
+    expect(within(repeatCell).getByTestId('repeat-icon')).toBeInTheDocument();
+  }
 });
