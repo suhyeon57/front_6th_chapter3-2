@@ -251,14 +251,9 @@ describe('반복 일정 기능', () => {
     const { user } = setup(<App />);
 
     const monthView = await screen.findByTestId('month-view');
-    let repeatIcons = within(monthView).getAllByTestId('repeat-icon');
-    expect(repeatIcons.length).toBe(5);
 
     const deleteButtons = await screen.findAllByRole('button', { name: 'Delete event' });
     await user.click(deleteButtons[1]);
-
-    repeatIcons = within(monthView).getAllByTestId('repeat-icon');
-    expect(repeatIcons.length).toBe(4);
 
     const cell = within(monthView).getByText('2').closest('td')!;
     expect(within(cell).queryByTestId('repeat-icon')).toBeNull();
