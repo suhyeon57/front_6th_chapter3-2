@@ -250,24 +250,21 @@ describe('반복 일정 기능', () => {
     );
     const { user } = setup(<App />);
 
-    let repeatIcons = within(await screen.findByTestId('month-view')).getAllByTestId('repeat-icon');
+    const monthView = await screen.findByTestId('month-view');
+    let repeatIcons = within(monthView).getAllByTestId('repeat-icon');
     expect(repeatIcons.length).toBe(5);
 
     const deleteButtons = await screen.findAllByRole('button', { name: 'Delete event' });
     await user.click(deleteButtons[1]);
 
-    repeatIcons = within(await screen.findByTestId('month-view')).getAllByTestId('repeat-icon');
+    repeatIcons = within(monthView).getAllByTestId('repeat-icon');
     expect(repeatIcons.length).toBe(4);
 
-    const cell = within(await screen.findByTestId('month-view'))
-      .getByText('2')
-      .closest('td')!;
+    const cell = within(monthView).getByText('2').closest('td')!;
     expect(within(cell).queryByTestId('repeat-icon')).toBeNull();
 
     for (let day of [1, 3, 4, 5]) {
-      const repeatCell = within(await screen.findByTestId('month-view'))
-        .getByText(String(day))
-        .closest('td')!;
+      const repeatCell = within(monthView).getByText(String(day)).closest('td')!;
       expect(within(repeatCell).getByTestId('repeat-icon')).toBeInTheDocument();
     }
   });
