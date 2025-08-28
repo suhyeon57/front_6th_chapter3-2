@@ -161,6 +161,7 @@ describe('repeatingDates', () => {
     const deleted = result.filter((event) => event.date !== '2025-10-03');
 
     expect(deleted.find((e) => e.date === '2025-10-03')).toBeUndefined();
+    expect(deleted.length).toBe(4);
     expect(deleted[0].date).toBe('2025-10-01');
     expect(deleted[1].date).toBe('2025-10-02');
     expect(deleted[2].date).toBe('2025-10-04');
