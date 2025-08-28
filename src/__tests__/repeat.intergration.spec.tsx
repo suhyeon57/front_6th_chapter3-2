@@ -305,7 +305,7 @@ describe('반복 일정 기능', () => {
     setup(<App />);
 
     const monthView = await screen.findByTestId('month-view');
-    const repeatIcons = within(monthView).getAllByTestId('repeat-icon');
+    let repeatIcons = within(monthView).getAllByTestId('repeat-icon');
     expect(repeatIcons.length).toBe(6);
 
     for (let day of [25, 26, 27, 28, 29, 30]) {
