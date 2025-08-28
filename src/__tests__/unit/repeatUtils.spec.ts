@@ -111,4 +111,64 @@ describe('repeatingDates', () => {
     expect(result[4].date).toBe('2025-10-21');
     expect(result[5].date).toBe('2025-10-26');
   });
+
+  it('반복 일정 중 하나를 수정하면 해당 일정만 repeat.type이 none으로 변경된다', () => {
+    const events: Event[] = [
+      {
+        id: '1',
+        title: '이벤트 1',
+        date: '2025-10-01',
+        startTime: '10:00',
+        endTime: '11:00',
+        description: '이벤트 1 설명',
+        location: '이벤트 1 장소',
+        category: '이벤트 1 카테고리',
+        repeat: { type: 'daily', interval: 1, endDate: '2025-10-05' },
+        notificationTime: 10,
+      },
+    ];
+    const result = repeatingDates(events[0]);
+    const modified = result.map((event) =>
+      event.date === '2025-10-03' ? { ...event, repeat: { type: 'none' } } : event
+    );
+
+    console.log(modified);
+    // 10월 3일 일정은 repeat.type이 none이어야 함
+    expect(modified[2].repeat.type).toBe('none');
+    // 나머지 일정은 repeat.type이 daily이어야 함
+    expect(modified[0].repeat.type).toBe('daily');
+    expect(modified[1].repeat.type).toBe('daily');
+    expect(modified[3].repeat.type).toBe('daily');
+    expect(modified[4].repeat.type).toBe('daily');
+  });
+
+  it('반복 일정 중 하나를 삭제하면 해당 일정만 삭제된다', () => {
+    const events: Event[] = [
+      {
+        id: '1',
+        title: '이벤트 1',
+        date: '2025-10-01',
+        startTime: '10:00',
+        endTime: '11:00',
+        description: '이벤트 1 설명',
+        location: '이벤트 1 장소',
+        category: '이벤트 1 카테고리',
+        repeat: { type: 'daily', interval: 1, endDate: '2025-10-05' },
+        notificationTime: 10,
+      },
+    ];
+    const result = repeatingDates(events[0]);
+    // 10월 3일 일정만 삭제
+    const deleted = result.filter((event) => event.date !== '2025-10-03');
+
+    // 10월 3일 일정이 없는지 확인
+    expect(deleted.find((e) => e.date === '2025-10-03')).toBeUndefined();
+    // 나머지 일정은 모두 존재해야 함
+    expect(deleted.map((e) => e.date)).toEqual([
+      '2025-10-01',
+      '2025-10-02',
+      '2025-10-04',
+      '2025-10-05',
+    ]);
+  });
 });
