@@ -1,5 +1,6 @@
 import { useSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
+
 import { Event, EventForm } from '../types';
 import { repeatingDates } from '../utils/repeatingDates';
 
